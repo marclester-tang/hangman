@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:hangman/screen/main_game.dart';
+import 'package:hangman/widgets/keyboard.dart';
 
 class Home extends StatefulWidget {
   Home({Key key}) : super(key: key);
+
+  static const routeName = "/";
 
   @override
   _HomeState createState() {
@@ -22,7 +26,35 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return null;
+    int _counter = 0;
+
+    void _incrementCounter() {
+      setState(() {
+        _counter++;
+      });
+    }
+
+    return Scaffold(
+      appBar: AppBar(),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            RaisedButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed(MainGame.routeName);
+              },
+              child: Text('New Game'),
+            ),
+            RaisedButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed(MainGame.routeName);
+              },
+              child: Text('Highscores'),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
