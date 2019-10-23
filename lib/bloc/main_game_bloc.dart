@@ -2,35 +2,37 @@ import "package:rxdart/rxdart.dart";
 import 'package:hangman/bloc/bloc_base.dart';
 
 class MainGameBloc implements BlocBase {
-  final BehaviorSubject<List<String>> _selectedLetters = new BehaviorSubject<List<String>>();
-  final BehaviorSubject<List<String>> _randomWord = new BehaviorSubject<List<String>>();
+  final BehaviorSubject<List<String>> _selectedLettersSubject =
+      new BehaviorSubject<List<String>>();
+  final BehaviorSubject<List<String>> _randomWordSubject =
+      new BehaviorSubject<List<String>>();
 
-  Stream<List<String>> get selectedLetters => _selectedLetters.stream;
-  Stream<List<String>> get randomWord => _randomWord.stream;
+  Stream<List<String>> get selectedLettersStream =>
+      _selectedLettersSubject.stream;
+  Stream<List<String>> get randomWordStream => _randomWordSubject.stream;
 
-  Stream get gameRoundStream => CombineLatestStream([
-    randomWord,
-    selectedLetters,
-  ], (values) => values);
+  Stream get gameRoundStream => Observable.combineLatestList([
+        randomWordStream,
+        selectedLettersStream,
+      ]);
 
   void randomizeWord() {
-    _randomWord.sink.add(['H', "E", "L", "L", "O", "W", "O", "R", "L", "D"]);
+    _randomWordSubject.sink
+        .add(['H', "E", "L", "L", "O", "W", "O", "R", "L", "D"]);
+    _selectedLettersSubject.sink.add([]);
   }
 
   void selectLetter(String letter) {
-    List<String> currentLetters = _selectedLetters.value ?? [];
+    List<String> currentLetters = _selectedLettersSubject.value ?? [];
 
-    currentLetters.add(letter);
+    currentLetters.add(letter.toUpperCase());
 
-    _selectedLetters.sink.add(currentLetters);
+    _selectedLettersSubject.sink.add(currentLetters);
   }
-
 
   @override
   void dispose() {
-    // TODO: implement dispose
-    _selectedLetters.close();
-    _randomWord.close();
+    _selectedLettersSubject.close();
+    _randomWordSubject.close();
   }
-
 }

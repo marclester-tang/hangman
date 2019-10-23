@@ -34,28 +34,33 @@ class _MainGameState extends State<MainGame> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
-        body: SafeArea(
-      child: StreamBuilder(
+      body: SafeArea(
+        child: StreamBuilder(
           stream: mainGameBloc.gameRoundStream,
           builder: (context, snapshot) {
-            List<String> toGuess = snapshot.hasData ? snapshot.data[0] : ["A", "B"];
-            List<String> selectedLetters = snapshot.hasData ? snapshot.data[1] : [];
+            final List<String> toGuess =
+                snapshot.hasData ? (snapshot.data[0] ?? []) : [];
+            final List<String> selectedLetters =
+                snapshot.hasData ? (snapshot.data[1] ?? []) : [];
+
             return Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ChallengeWord(
-                    word: toGuess,
-                    selectedLetters: selectedLetters,
-                  ),
-                  Keyboard(
-                    selectedLetters: selectedLetters,
-                    onPress: mainGameBloc.selectLetter,
-                  ),
-                ]);
-          }),
-    ));
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ChallengeWord(
+                  word: toGuess,
+                  selectedLetters: selectedLetters,
+                ),
+                Keyboard(
+                  selectedLetters: selectedLetters,
+                  onPress: mainGameBloc.selectLetter,
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
   }
 }
