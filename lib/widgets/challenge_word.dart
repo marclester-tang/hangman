@@ -11,6 +11,7 @@ class ChallengeWord extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(10),
+      height: 100,
       width: MediaQuery.of(context).size.width,
       child: word != null && word.isNotEmpty
           ? FittedBox(

@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:random_words/random_words.dart';
 import "package:rxdart/rxdart.dart";
 import 'package:hangman/bloc/bloc_base.dart';
 
@@ -17,8 +20,19 @@ class MainGameBloc implements BlocBase {
       ]);
 
   void randomizeWord() {
-    _randomWordSubject.sink
-        .add(['H', "E", "L", "L", "O", "W", "O", "R", "L", "D"]);
+    String randomWord = '';
+
+    if (Random().nextInt(1) == 0) {
+      generateNoun().take(1).forEach((n) {
+        randomWord = n.asString;
+      });
+    } else {
+      generateAdjective().take(1).forEach((a) {
+        randomWord = a.asString;
+      });
+    }
+
+    _randomWordSubject.sink.add(randomWord.toUpperCase().split(''));
     _selectedLettersSubject.sink.add([]);
   }
 

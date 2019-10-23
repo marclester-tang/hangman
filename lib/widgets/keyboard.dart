@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:hangman/constants.dart';
 import 'package:hangman/widgets/letter_widget.dart';
 
 class Keyboard extends StatelessWidget {
@@ -8,35 +9,6 @@ class Keyboard extends StatelessWidget {
 
   Keyboard({Key key, this.selectedLetters, this.onPress}) : super(key: key);
 
-  final List<String> availableLetters = [
-    "a",
-    "b",
-    "c",
-    "d",
-    "e",
-    "f",
-    "g",
-    "h",
-    "i",
-    "j",
-    "k",
-    "l",
-    "m",
-    "n",
-    "o",
-    "p",
-    "q",
-    "r",
-    "s",
-    "t",
-    "u",
-    "v",
-    "w",
-    "x",
-    "y",
-    "z"
-  ];
-
   Widget letterButton(letter) => Padding(
         padding: EdgeInsets.all(2),
         child: GestureDetector(
@@ -44,7 +16,7 @@ class Keyboard extends StatelessWidget {
             onPress(letter);
           },
           child: LetterWidget(
-            selectedLetters.contains(letter) ? null : letter,
+            selectedLetters.contains(letter.toUpperCase()) ? null : letter,
           ),
         ),
       );
@@ -53,7 +25,7 @@ class Keyboard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Wrap(
       alignment: WrapAlignment.center,
-      children: availableLetters.map((letter) => letterButton(letter)).toList(),
+      children: LETTERS.map((letter) => letterButton(letter)).toList(),
     );
   }
 }

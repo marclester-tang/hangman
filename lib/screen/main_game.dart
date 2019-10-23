@@ -23,8 +23,8 @@ class _MainGameState extends State<MainGame> {
     super.didChangeDependencies();
     if (mainGameBloc == null) {
       mainGameBloc = BlocProvider.of<MainGameBloc>(context);
+      mainGameBloc.randomizeWord();
     }
-    mainGameBloc.randomizeWord();
   }
 
   @override
