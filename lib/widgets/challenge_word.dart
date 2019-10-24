@@ -4,8 +4,11 @@ import 'package:hangman/widgets/letter_widget.dart';
 class ChallengeWord extends StatelessWidget {
   final List<String> word;
   final List<String> selectedLetters;
+  final bool isAlreadyGuessed;
 
-  ChallengeWord({Key key, this.selectedLetters, this.word}) : super(key: key);
+  ChallengeWord(
+      {Key key, this.selectedLetters, this.word, this.isAlreadyGuessed = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +23,7 @@ class ChallengeWord extends StatelessWidget {
                     .map(
                       (letter) => LetterWidget(
                         selectedLetters.contains(letter) ? letter : null,
+                        isHighlighted: isAlreadyGuessed,
                       ),
                     )
                     .toList(),

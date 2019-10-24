@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:hangman/util/word_checker_util.dart';
 import 'package:random_words/random_words.dart';
 import "package:rxdart/rxdart.dart";
 import 'package:hangman/bloc/bloc_base.dart';
@@ -22,7 +23,7 @@ class MainGameBloc implements BlocBase {
   void randomizeWord() {
     String randomWord = '';
 
-    if (Random().nextInt(1) == 0) {
+    if (Random().nextInt(2) == 0) {
       generateNoun().take(1).forEach((n) {
         randomWord = n.asString;
       });
@@ -36,12 +37,21 @@ class MainGameBloc implements BlocBase {
     _selectedLettersSubject.sink.add([]);
   }
 
-  void selectLetter(String letter) {
+  Future<void> selectLetter(String letter) async {
     List<String> currentLetters = _selectedLettersSubject.value ?? [];
 
     currentLetters.add(letter.toUpperCase());
 
+    List<String> randomWord = _randomWordSubject.value ?? [];
+
     _selectedLettersSubject.sink.add(currentLetters);
+
+    if (isWordGuessed(randomWord, currentLetters)) {
+      await Future.delayed(Duration(seconds: 1));
+      randomizeWord();
+
+      return;
+    }
   }
 
   @override

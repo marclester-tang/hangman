@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 class LetterWidget extends StatelessWidget {
   final String letter;
+  final bool isHighlighted;
 
-  LetterWidget(this.letter, {Key key}) : super(key: key);
+  LetterWidget(this.letter, {this.isHighlighted = false, Key key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +19,9 @@ class LetterWidget extends StatelessWidget {
           width: 30,
           height: 50,
           decoration: BoxDecoration(
-            color: letter != null ? Colors.green : Colors.grey,
+            color: isHighlighted
+                ? Colors.orange
+                : letter != null ? Colors.green : Colors.grey,
             borderRadius: BorderRadius.all(
               const Radius.circular(10.0),
             ),

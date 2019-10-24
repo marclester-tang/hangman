@@ -5,7 +5,7 @@ import 'package:hangman/widgets/letter_widget.dart';
 
 class Keyboard extends StatelessWidget {
   final List<String> selectedLetters;
-  final onPress;
+  final Function onPress;
 
   Keyboard({Key key, this.selectedLetters, this.onPress}) : super(key: key);
 

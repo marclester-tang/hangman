@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hangman/bloc/bloc_provider.dart';
 import 'package:hangman/bloc/main_game_bloc.dart';
+import 'package:hangman/util/word_checker_util.dart';
 import 'package:hangman/widgets/challenge_word.dart';
 import 'package:hangman/widgets/keyboard.dart';
 
@@ -43,6 +44,8 @@ class _MainGameState extends State<MainGame> {
                 snapshot.hasData ? (snapshot.data[0] ?? []) : [];
             final List<String> selectedLetters =
                 snapshot.hasData ? (snapshot.data[1] ?? []) : [];
+            final bool isAlreadyGuessed =
+                isWordGuessed(toGuess, selectedLetters);
 
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -51,10 +54,11 @@ class _MainGameState extends State<MainGame> {
                 ChallengeWord(
                   word: toGuess,
                   selectedLetters: selectedLetters,
+                  isAlreadyGuessed: isAlreadyGuessed,
                 ),
                 Keyboard(
                   selectedLetters: selectedLetters,
-                  onPress: mainGameBloc.selectLetter,
+                  onPress: isAlreadyGuessed ? null : mainGameBloc.selectLetter,
                 ),
               ],
             );
