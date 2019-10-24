@@ -44,6 +44,7 @@ class _MainGameState extends State<MainGame> {
                 snapshot.hasData ? (snapshot.data[0] ?? []) : [];
             final List<String> selectedLetters =
                 snapshot.hasData ? (snapshot.data[1] ?? []) : [];
+            final int wrongAnswers = snapshot.hasData ? (snapshot.data[2] ?? 0) : 0;
             final bool isAlreadyGuessed =
                 isWordGuessed(toGuess, selectedLetters);
 
@@ -60,6 +61,7 @@ class _MainGameState extends State<MainGame> {
                   selectedLetters: selectedLetters,
                   onPress: isAlreadyGuessed ? null : mainGameBloc.selectLetter,
                 ),
+                Text(wrongAnswers.toString())
               ],
             );
           },

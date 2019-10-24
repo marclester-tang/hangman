@@ -10,14 +10,18 @@ class MainGameBloc implements BlocBase {
       new BehaviorSubject<List<String>>();
   final BehaviorSubject<List<String>> _randomWordSubject =
       new BehaviorSubject<List<String>>();
+  final BehaviorSubject<int> _wrongSelectionSubject =
+      new BehaviorSubject<int>();
 
   Stream<List<String>> get selectedLettersStream =>
       _selectedLettersSubject.stream;
   Stream<List<String>> get randomWordStream => _randomWordSubject.stream;
+  Stream<int> get wrongSelectionStream => _wrongSelectionSubject.stream;
 
   Stream get gameRoundStream => Observable.combineLatestList([
         randomWordStream,
         selectedLettersStream,
+        wrongSelectionStream
       ]);
 
   void randomizeWord() {
@@ -35,6 +39,7 @@ class MainGameBloc implements BlocBase {
 
     _randomWordSubject.sink.add(randomWord.toUpperCase().split(''));
     _selectedLettersSubject.sink.add([]);
+    _wrongSelectionSubject.sink.add(0);
   }
 
   Future<void> selectLetter(String letter) async {
@@ -45,6 +50,9 @@ class MainGameBloc implements BlocBase {
     List<String> randomWord = _randomWordSubject.value ?? [];
 
     _selectedLettersSubject.sink.add(currentLetters);
+    if(!_randomWordSubject.value.contains(letter.toUpperCase())) {
+      _wrongSelectionSubject.sink.add(_wrongSelectionSubject.value + 1);
+    }
 
     if (isWordGuessed(randomWord, currentLetters)) {
       await Future.delayed(Duration(seconds: 1));
@@ -58,5 +66,6 @@ class MainGameBloc implements BlocBase {
   void dispose() {
     _selectedLettersSubject.close();
     _randomWordSubject.close();
+    _wrongSelectionSubject.close();
   }
 }
