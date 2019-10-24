@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hangman/bloc/bloc_provider.dart';
 import 'package:hangman/bloc/main_game_bloc.dart';
 import 'package:hangman/util/word_checker_util.dart';
+import 'package:hangman/widgets/animated_hangman.dart';
 import 'package:hangman/widgets/challenge_word.dart';
 import 'package:hangman/widgets/keyboard.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -128,7 +129,7 @@ class _MainGameState extends State<MainGame> {
                   isAlreadyGuessed: isAlreadyGuessed,
                 ),
                 Expanded(
-                  child: Placeholder(),
+                  child: AnimatedHangman(),
                 ),
                 _buildHelpActions(),
                 Keyboard(
