@@ -4,6 +4,7 @@ import 'package:hangman/bloc/main_game_bloc.dart';
 import 'package:hangman/util/word_checker_util.dart';
 import 'package:hangman/widgets/challenge_word.dart';
 import 'package:hangman/widgets/keyboard.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class MainGame extends StatefulWidget {
   MainGame({Key key}) : super(key: key);
@@ -18,6 +19,9 @@ class MainGame extends StatefulWidget {
 
 class _MainGameState extends State<MainGame> {
   MainGameBloc mainGameBloc;
+  bool isSkipWordUsed = false;
+  bool isRemoveWrongLettersUsed = false;
+  bool isRevealLettersUsed = false;
 
   @override
   void didChangeDependencies() {
@@ -33,6 +37,71 @@ class _MainGameState extends State<MainGame> {
     super.dispose();
   }
 
+  Widget _buildHelpAction({IconData icon, Function onPressed, Color color}) {
+    return GestureDetector(
+      child: Container(
+        margin: EdgeInsets.all(20),
+        child: CircleAvatar(
+          radius: 20,
+          backgroundColor: color,
+          child: Text(
+            String.fromCharCode(icon.codePoint),
+            style: TextStyle(
+                fontSize: 30,
+                fontFamily: icon.fontFamily,
+                package: icon.fontPackage,
+                color: Colors.white),
+          ),
+        ),
+      ),
+      onTap: onPressed,
+    );
+  }
+
+  Widget _buildHelpActions() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        _buildHelpAction(
+          icon: MdiIcons.debugStepOver,
+          onPressed: isSkipWordUsed
+              ? null
+              : () {
+                  mainGameBloc.skipWord();
+                  setState(() {
+                    isSkipWordUsed = true;
+                  });
+                },
+          color: isSkipWordUsed ? Colors.grey : Colors.blue,
+        ),
+        _buildHelpAction(
+          icon: MdiIcons.alphabeticalOff,
+          onPressed: isRemoveWrongLettersUsed
+              ? null
+              : () {
+                  mainGameBloc.removeWrongLetters();
+                  setState(() {
+                    isRemoveWrongLettersUsed = true;
+                  });
+                },
+          color: isRemoveWrongLettersUsed ? Colors.grey : Colors.red,
+        ),
+        _buildHelpAction(
+          icon: MdiIcons.eyeCircle,
+          onPressed: isRevealLettersUsed
+              ? null
+              : () {
+                  mainGameBloc.revealLetters();
+                  setState(() {
+                    isRevealLettersUsed = true;
+                  });
+                },
+          color: isRevealLettersUsed ? Colors.grey : Colors.lime,
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,7 +113,8 @@ class _MainGameState extends State<MainGame> {
                 snapshot.hasData ? (snapshot.data[0] ?? []) : [];
             final List<String> selectedLetters =
                 snapshot.hasData ? (snapshot.data[1] ?? []) : [];
-            final int wrongAnswers = snapshot.hasData ? (snapshot.data[2] ?? 0) : 0;
+            final int wrongAnswers =
+                snapshot.hasData ? (snapshot.data[2] ?? 0) : 0;
             final bool isAlreadyGuessed =
                 isWordGuessed(toGuess, selectedLetters);
 
@@ -57,11 +127,15 @@ class _MainGameState extends State<MainGame> {
                   selectedLetters: selectedLetters,
                   isAlreadyGuessed: isAlreadyGuessed,
                 ),
+                Expanded(
+                  child: Placeholder(),
+                ),
+                _buildHelpActions(),
                 Keyboard(
                   selectedLetters: selectedLetters,
                   onPress: isAlreadyGuessed ? null : mainGameBloc.selectLetter,
                 ),
-                Text(wrongAnswers.toString())
+                // Text(wrongAnswers.toString())
               ],
             );
           },

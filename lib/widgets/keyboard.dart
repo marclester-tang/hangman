@@ -12,9 +12,12 @@ class Keyboard extends StatelessWidget {
   Widget letterButton(letter) => Padding(
         padding: EdgeInsets.all(2),
         child: GestureDetector(
-          onTap: selectedLetters.contains(letter.toUpperCase()) ? null : () {
-            onPress(letter);
-          },
+          onTap:
+              onPress == null || selectedLetters.contains(letter.toUpperCase())
+                  ? null
+                  : () {
+                      onPress(letter);
+                    },
           child: LetterWidget(
             selectedLetters.contains(letter.toUpperCase()) ? null : letter,
           ),
