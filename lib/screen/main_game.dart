@@ -23,9 +23,6 @@ class MainGame extends StatefulWidget {
 
 class _MainGameState extends State<MainGame> {
   MainGameBloc mainGameBloc;
-  bool isSkipWordUsed = false;
-  bool isRemoveWrongLettersUsed = false;
-  bool isRevealLettersUsed = false;
   StreamSubscription<int> _wrongTriesCountStreamSubscription;
 
   @override
@@ -33,7 +30,7 @@ class _MainGameState extends State<MainGame> {
     super.didChangeDependencies();
     if (mainGameBloc == null) {
       mainGameBloc = BlocProvider.of<MainGameBloc>(context);
-      mainGameBloc.randomizeWord();
+      mainGameBloc.initialize();
       _wrongTriesCountListener(mainGameBloc);
     }
   }
@@ -56,6 +53,8 @@ class _MainGameState extends State<MainGame> {
   }
 
   Future<void> _onGameOver() async {
+    mainGameBloc.revealWord();
+
     await showDialog(
       barrierDismissible: false,
       context: context,
@@ -103,46 +102,65 @@ class _MainGameState extends State<MainGame> {
   }
 
   Widget _buildHelpActions() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        _buildHelpAction(
-          icon: MdiIcons.debugStepOver,
-          onPressed: isSkipWordUsed
-              ? null
-              : () {
-                  mainGameBloc.skipWord();
-                  setState(() {
-                    isSkipWordUsed = true;
-                  });
-                },
-          color: isSkipWordUsed ? Colors.grey : Colors.blue,
-        ),
-        _buildHelpAction(
-          icon: MdiIcons.alphabeticalOff,
-          onPressed: isRemoveWrongLettersUsed
-              ? null
-              : () {
-                  mainGameBloc.removeWrongLetters();
-                  setState(() {
-                    isRemoveWrongLettersUsed = true;
-                  });
-                },
-          color: isRemoveWrongLettersUsed ? Colors.grey : Colors.red,
-        ),
-        _buildHelpAction(
-          icon: MdiIcons.eyeCircle,
-          onPressed: isRevealLettersUsed
-              ? null
-              : () {
-                  mainGameBloc.revealLetters();
-                  setState(() {
-                    isRevealLettersUsed = true;
-                  });
-                },
-          color: isRevealLettersUsed ? Colors.grey : Colors.lime,
-        ),
-      ],
+    return StreamBuilder(
+      stream: mainGameBloc.helpActionsUsedStream,
+      builder: (context, snapshot) {
+        final bool isSkipWordUsed =
+            snapshot.hasData ? (snapshot.data[0] ?? false) : false;
+        final bool isRemoveWrongLettersUsed =
+            snapshot.hasData ? (snapshot.data[1] ?? false) : false;
+        final bool isRevealLetterUsed =
+            snapshot.hasData ? (snapshot.data[2] ?? false) : false;
+
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            _buildHelpAction(
+              icon: MdiIcons.debugStepOver,
+              onPressed: isSkipWordUsed ? null : mainGameBloc.skipWord,
+              color: isSkipWordUsed ? Colors.grey : Colors.blue,
+            ),
+            _buildHelpAction(
+              icon: MdiIcons.alphabeticalOff,
+              onPressed: isRemoveWrongLettersUsed
+                  ? null
+                  : mainGameBloc.removeWrongLetters,
+              color: isRemoveWrongLettersUsed ? Colors.grey : Colors.red,
+            ),
+            _buildHelpAction(
+              icon: MdiIcons.eyeCircle,
+              onPressed: isRevealLetterUsed ? null : mainGameBloc.revealLetter,
+              color: isRevealLetterUsed ? Colors.grey : Colors.lime,
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildScoreStatsWidget() {
+    return StreamBuilder(
+      stream: mainGameBloc.scoreStatsStream,
+      builder: (context, snapshot) {
+        final int score = snapshot.hasData ? (snapshot.data[0] ?? 0) : 0;
+        final int wrongTriesCount =
+            snapshot.hasData ? (snapshot.data[1] ?? 0) : 0;
+
+        return Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                'Score: $score',
+              ),
+              Text(
+                'Number of Tries Left: ${mainGameBloc.maxNumberOfTries - wrongTriesCount}',
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -157,8 +175,6 @@ class _MainGameState extends State<MainGame> {
                 snapshot.hasData ? (snapshot.data[0] ?? []) : [];
             final List<String> selectedLetters =
                 snapshot.hasData ? (snapshot.data[1] ?? []) : [];
-            final int wrongTriesCount =
-                snapshot.hasData ? (snapshot.data[2] ?? 0) : 0;
             final bool isAlreadyGuessed =
                 isWordGuessed(toGuess, selectedLetters);
 
@@ -178,19 +194,13 @@ class _MainGameState extends State<MainGame> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     _buildHelpActions(),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Text(
-                        'Number of Tries Left: ${mainGameBloc.maxNumberOfTries - wrongTriesCount}',
-                      ),
-                    ),
+                    _buildScoreStatsWidget(),
                   ],
                 ),
                 Keyboard(
                   selectedLetters: selectedLetters,
                   onPress: isAlreadyGuessed ? null : mainGameBloc.selectLetter,
                 ),
-                // Text(wrongAnswers.toString())
               ],
             );
           },

@@ -8,6 +8,7 @@ import 'package:hangman/bloc/bloc_base.dart';
 
 class MainGameBloc implements BlocBase {
   final int maxNumberOfTries = 6;
+  final int pointPerCorrectTry = 10;
 
   final BehaviorSubject<List<String>> _selectedLettersSubject =
       new BehaviorSubject<List<String>>();
@@ -15,15 +16,60 @@ class MainGameBloc implements BlocBase {
       new BehaviorSubject<List<String>>();
   final BehaviorSubject<int> _wrongTriesCountSubject =
       new BehaviorSubject<int>();
+  final BehaviorSubject<bool> _isSkipWordUsedSubject =
+      new BehaviorSubject<bool>();
+  final BehaviorSubject<bool> _isRemoveWrongLettersUsedSubject =
+      new BehaviorSubject<bool>();
+  final BehaviorSubject<bool> _isRevealLetterUsedSubject =
+      new BehaviorSubject<bool>();
+  final BehaviorSubject<int> _scoreSubject = new BehaviorSubject<int>();
 
   Stream<List<String>> get selectedLettersStream =>
       _selectedLettersSubject.stream;
   Stream<List<String>> get randomWordStream => _randomWordSubject.stream;
   Stream<int> get wrongTriesCountStream => _wrongTriesCountSubject.stream;
-  Stream get gameRoundStream => Observable.combineLatestList(
-      [randomWordStream, selectedLettersStream, wrongTriesCountStream]);
+  Stream get gameRoundStream => CombineLatestStream.list([
+        randomWordStream,
+        selectedLettersStream,
+      ]);
+  Stream<bool> get isSkipWordUsedStream => _isSkipWordUsedSubject.stream;
+  Stream<bool> get isRemoveWrongLettersUsedStream =>
+      _isRemoveWrongLettersUsedSubject.stream;
+  Stream<bool> get isRevealLetterUsedStream =>
+      _isRevealLetterUsedSubject.stream;
+  Stream get helpActionsUsedStream => CombineLatestStream.list([
+        isSkipWordUsedStream,
+        isRemoveWrongLettersUsedStream,
+        isRevealLetterUsedStream,
+      ]);
+  Stream<int> get scoreStream => _scoreSubject.stream;
+  Stream get scoreStatsStream => CombineLatestStream.list([
+        scoreStream,
+        wrongTriesCountStream,
+      ]);
 
   List<String> alreadyAppearedWords = [];
+
+  @override
+  void dispose() {
+    _selectedLettersSubject.close();
+    _randomWordSubject.close();
+    _wrongTriesCountSubject.close();
+    _isSkipWordUsedSubject.close();
+    _isRemoveWrongLettersUsedSubject.close();
+    _isRevealLetterUsedSubject.close();
+    _scoreSubject.close();
+  }
+
+  void initialize() {
+    _isSkipWordUsedSubject.sink.add(false);
+    _isRemoveWrongLettersUsedSubject.sink.add(false);
+    _isRevealLetterUsedSubject.sink.add(false);
+    _scoreSubject.sink.add(0);
+    _wrongTriesCountSubject.sink.add(0);
+
+    randomizeWord();
+  }
 
   Future<void> revealWord() async {
     final List<String> currentLetters = _selectedLettersSubject.value ?? [];
@@ -34,7 +80,9 @@ class MainGameBloc implements BlocBase {
       ...randomWord,
     ]);
 
-    await nextWord();
+    if (_wrongTriesCountSubject.value < maxNumberOfTries) {
+      await nextWord();
+    }
   }
 
   Future<void> nextWord() async {
@@ -43,7 +91,14 @@ class MainGameBloc implements BlocBase {
   }
 
   void randomizeWord() {
-    final String randomWord = generateNoun().take(1).toList()[0].asString;
+    String randomWord = '';
+
+    if (Random().nextInt(2) == 0) {
+      randomWord = generateNoun().take(1).toList()[0].asString;
+    } else {
+      randomWord = generateAdjective().take(1).toList()[0].asString;
+    }
+
     _selectedLettersSubject.sink.add([]);
     _wrongTriesCountSubject.sink.add(0);
 
@@ -76,12 +131,17 @@ class MainGameBloc implements BlocBase {
     }
 
     if (isWordGuessed(randomWord, currentLetters)) {
+      _scoreSubject.sink.add(_scoreSubject.value +
+          (pointPerCorrectTry +
+              (maxNumberOfTries - _wrongTriesCountSubject.value - 1)));
       await nextWord();
       return;
     }
   }
 
   Future<void> skipWord() async {
+    _isSkipWordUsedSubject.sink.add(true);
+
     await revealWord();
   }
 
@@ -104,9 +164,11 @@ class MainGameBloc implements BlocBase {
       ...unselectedWrongLetters.sublist(
           0, (unselectedWrongLetters.length / 2).ceil()),
     ]);
+
+    _isRemoveWrongLettersUsedSubject.sink.add(true);
   }
 
-  Future<void> revealLetters() async {
+  Future<void> revealLetter() async {
     final List<String> randomWord = _randomWordSubject.value ?? [];
     final List<String> currentLetters = _selectedLettersSubject.value ?? [];
     final List<String> unrevealedLetters = randomWord
@@ -125,17 +187,11 @@ class MainGameBloc implements BlocBase {
     ];
 
     _selectedLettersSubject.sink.add(updatedCurrentLetters);
+    _isRevealLetterUsedSubject.sink.add(true);
 
     if (isWordGuessed(randomWord, updatedCurrentLetters)) {
       await nextWord();
       return;
     }
-  }
-
-  @override
-  void dispose() {
-    _selectedLettersSubject.close();
-    _randomWordSubject.close();
-    _wrongTriesCountSubject.close();
   }
 }
