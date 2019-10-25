@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:hangman/bloc/bloc_provider.dart';
 import 'package:hangman/bloc/main_game_bloc.dart';
+import 'package:hangman/screen/home.dart';
 import 'package:hangman/util/word_checker_util.dart';
 import 'package:hangman/widgets/challenge_word.dart';
 import 'package:hangman/widgets/keyboard.dart';
@@ -22,6 +25,7 @@ class _MainGameState extends State<MainGame> {
   bool isSkipWordUsed = false;
   bool isRemoveWrongLettersUsed = false;
   bool isRevealLettersUsed = false;
+  StreamSubscription<int> _wrongTriesCountStreamSubscription;
 
   @override
   void didChangeDependencies() {
@@ -29,12 +33,51 @@ class _MainGameState extends State<MainGame> {
     if (mainGameBloc == null) {
       mainGameBloc = BlocProvider.of<MainGameBloc>(context);
       mainGameBloc.randomizeWord();
+      _wrongTriesCountListener(mainGameBloc);
     }
   }
 
   @override
   void dispose() {
     super.dispose();
+    mainGameBloc.dispose();
+    _wrongTriesCountStreamSubscription.cancel();
+  }
+
+  void _wrongTriesCountListener(MainGameBloc bloc) {
+    _wrongTriesCountStreamSubscription = bloc.wrongTriesCountStream.listen(
+      (int wrongTriesCount) {
+        if (wrongTriesCount >= mainGameBloc.maxNumberOfTries) {
+          _onGameOver();
+        }
+      },
+    );
+  }
+
+  Future<void> _onGameOver() async {
+    await showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Game Over',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Exit'),
+              onPressed: () => Navigator.popUntil(
+                context,
+                (route) => route.settings.name == Home.routeName,
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Widget _buildHelpAction({IconData icon, Function onPressed, Color color}) {
@@ -113,7 +156,7 @@ class _MainGameState extends State<MainGame> {
                 snapshot.hasData ? (snapshot.data[0] ?? []) : [];
             final List<String> selectedLetters =
                 snapshot.hasData ? (snapshot.data[1] ?? []) : [];
-            final int wrongAnswers =
+            final int wrongTriesCount =
                 snapshot.hasData ? (snapshot.data[2] ?? 0) : 0;
             final bool isAlreadyGuessed =
                 isWordGuessed(toGuess, selectedLetters);
@@ -130,7 +173,18 @@ class _MainGameState extends State<MainGame> {
                 Expanded(
                   child: Placeholder(),
                 ),
-                _buildHelpActions(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _buildHelpActions(),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: Text(
+                        'Number of Tries Left: ${mainGameBloc.maxNumberOfTries - wrongTriesCount}',
+                      ),
+                    ),
+                  ],
+                ),
                 Keyboard(
                   selectedLetters: selectedLetters,
                   onPress: isAlreadyGuessed ? null : mainGameBloc.selectLetter,

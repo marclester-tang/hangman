@@ -7,19 +7,21 @@ import "package:rxdart/rxdart.dart";
 import 'package:hangman/bloc/bloc_base.dart';
 
 class MainGameBloc implements BlocBase {
+  final int maxNumberOfTries = 6;
+
   final BehaviorSubject<List<String>> _selectedLettersSubject =
       new BehaviorSubject<List<String>>();
   final BehaviorSubject<List<String>> _randomWordSubject =
       new BehaviorSubject<List<String>>();
-  final BehaviorSubject<int> _wrongSelectionSubject =
+  final BehaviorSubject<int> _wrongTriesCountSubject =
       new BehaviorSubject<int>();
 
   Stream<List<String>> get selectedLettersStream =>
       _selectedLettersSubject.stream;
   Stream<List<String>> get randomWordStream => _randomWordSubject.stream;
-  Stream<int> get wrongSelectionStream => _wrongSelectionSubject.stream;
+  Stream<int> get wrongTriesCountStream => _wrongTriesCountSubject.stream;
   Stream get gameRoundStream => Observable.combineLatestList(
-      [randomWordStream, selectedLettersStream, wrongSelectionStream]);
+      [randomWordStream, selectedLettersStream, wrongTriesCountStream]);
 
   List<String> alreadyAppearedWords = [];
 
@@ -43,11 +45,11 @@ class MainGameBloc implements BlocBase {
   void randomizeWord() {
     final String randomWord = generateNoun().take(1).toList()[0].asString;
     _selectedLettersSubject.sink.add([]);
-    _wrongSelectionSubject.sink.add(0);
+    _wrongTriesCountSubject.sink.add(0);
 
     if (randomWord.length < 5 ||
         (alreadyAppearedWords.contains(randomWord) &&
-            alreadyAppearedWords.length < 1000)) {
+            alreadyAppearedWords.length < 500)) {
       randomizeWord();
       return;
     }
@@ -70,7 +72,7 @@ class MainGameBloc implements BlocBase {
 
     _selectedLettersSubject.sink.add(currentLetters);
     if (!_randomWordSubject.value.contains(letter.toUpperCase())) {
-      _wrongSelectionSubject.sink.add(_wrongSelectionSubject.value + 1);
+      _wrongTriesCountSubject.sink.add(_wrongTriesCountSubject.value + 1);
     }
 
     if (isWordGuessed(randomWord, currentLetters)) {
@@ -134,6 +136,6 @@ class MainGameBloc implements BlocBase {
   void dispose() {
     _selectedLettersSubject.close();
     _randomWordSubject.close();
-    _wrongSelectionSubject.close();
+    _wrongTriesCountSubject.close();
   }
 }
