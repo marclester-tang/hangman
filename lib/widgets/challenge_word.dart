@@ -13,6 +13,8 @@ class ChallengeWord extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: Colors.brown.withOpacity(0.5),
+      margin: EdgeInsets.only(bottom: 10),
       padding: EdgeInsets.all(10),
       height: 100,
       width: MediaQuery.of(context).size.width,

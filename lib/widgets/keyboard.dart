@@ -20,6 +20,8 @@ class Keyboard extends StatelessWidget {
                     },
           child: LetterWidget(
             selectedLetters.contains(letter.toUpperCase()) ? null : letter,
+            withShadow: !(onPress == null ||
+                selectedLetters.contains(letter.toUpperCase())),
           ),
         ),
       );
