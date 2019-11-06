@@ -7,7 +7,7 @@ import "package:rxdart/rxdart.dart";
 import 'package:hangman/bloc/bloc_base.dart';
 
 class MainGameBloc implements BlocBase {
-  final int maxNumberOfTries = 6;
+  final int maxNumberOfTries = 7;
   final int pointPerCorrectTry = 10;
 
   final BehaviorSubject<List<String>> _selectedLettersSubject =

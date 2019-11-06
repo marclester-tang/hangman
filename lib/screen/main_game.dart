@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:hangman/bloc/bloc_provider.dart';
 import 'package:hangman/bloc/main_game_bloc.dart';
+import 'package:hangman/controller/hangman_controller.dart';
 import 'package:hangman/screen/home.dart';
 import 'package:hangman/util/word_checker_util.dart';
 import 'package:hangman/widgets/animated_hangman.dart';
@@ -24,6 +25,7 @@ class MainGame extends StatefulWidget {
 class _MainGameState extends State<MainGame> {
   MainGameBloc mainGameBloc;
   StreamSubscription<int> _wrongTriesCountStreamSubscription;
+  HangmanController _hangmanController;
 
   @override
   void didChangeDependencies() {
@@ -32,6 +34,9 @@ class _MainGameState extends State<MainGame> {
       mainGameBloc = BlocProvider.of<MainGameBloc>(context);
       mainGameBloc.initialize();
       _wrongTriesCountListener(mainGameBloc);
+    }
+    if(_hangmanController == null){
+      _hangmanController = HangmanController();
     }
   }
 
@@ -45,6 +50,9 @@ class _MainGameState extends State<MainGame> {
   void _wrongTriesCountListener(MainGameBloc bloc) {
     _wrongTriesCountStreamSubscription = bloc.wrongTriesCountStream.listen(
       (int wrongTriesCount) {
+
+        _hangmanController.playAnimationByTries(wrongTriesCount);
+
         if (wrongTriesCount >= mainGameBloc.maxNumberOfTries) {
           _onGameOver();
         }
@@ -204,7 +212,7 @@ class _MainGameState extends State<MainGame> {
                     isAlreadyGuessed: isAlreadyGuessed,
                   ),
                   Expanded(
-                    child: AnimatedHangman(),
+                    child: AnimatedHangman(controller: _hangmanController),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
