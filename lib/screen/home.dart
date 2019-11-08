@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hangman/screen/main_game.dart';
 import 'package:hangman/screen/leaderboard.dart';
-import 'package:hangman/widgets/keyboard.dart';
 
 class Home extends StatefulWidget {
   Home({Key key}) : super(key: key);
@@ -27,33 +26,57 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    int _counter = 0;
-
-    void _incrementCounter() {
-      setState(() {
-        _counter++;
-      });
-    }
-
     return Scaffold(
-      appBar: AppBar(),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            RaisedButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed(MainGame.routeName);
-              },
-              child: Text('New Game'),
-            ),
-            RaisedButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed(Leaderboard.routeName);
-              },
-              child: Text('Highscores'),
-            ),
-          ],
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            colorFilter: ColorFilter.mode(
+                Colors.white.withOpacity(0.7), BlendMode.dstATop),
+            image: AssetImage("assets/images/background.png"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.all(20),
+                child: Text(
+                  "HANGMAN",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 50,
+                    fontFamily: 'Courier',
+                  ),
+                ),
+              ),
+              RaisedButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed(MainGame.routeName);
+                },
+                child: Text(
+                  'New Game',
+                  style: TextStyle(
+                    fontFamily: 'Courier',
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              RaisedButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed(Leaderboard.routeName);
+                },
+                child: Text(
+                  'Highscores',
+                  style: TextStyle(
+                    fontFamily: 'Courier',
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
