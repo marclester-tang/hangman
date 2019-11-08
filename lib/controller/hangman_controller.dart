@@ -21,8 +21,8 @@ class HangmanController extends FlareControls {
   HangmanController(){
     _tieHands = "1. tie hands";
     _tieHandsWithRope = "2. tie hands w/ rope";
-    _tieFeet = "3. tie feet";
-    _tieFeetWithRope = "4 tie feet w/ rope";
+    _tieFeet = "3. tie feet ";
+    _tieFeetWithRope = "4 tie feet  w/ rope";
     _coverHead = "5. cover head";
     _nooze = "6. noose";
     _hang = "7. hang";
