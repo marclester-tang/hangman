@@ -3,6 +3,7 @@ import 'package:hangman/bloc/bloc_provider.dart';
 import 'package:hangman/bloc/main_game_bloc.dart';
 import 'package:hangman/screen/home.dart';
 import 'package:hangman/screen/main_game.dart';
+import 'package:hangman/screen/leaderboard.dart';
 import 'package:hangman/widgets/keyboard.dart';
 
 void main() => runApp(MyApp());
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
                 bloc: MainGameBloc(),
                 child: MainGame(),
               ),
+          Leaderboard.routeName: (BuildContext context) => Leaderboard(),
         });
   }
 }

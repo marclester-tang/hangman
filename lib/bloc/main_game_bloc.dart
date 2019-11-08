@@ -50,6 +50,8 @@ class MainGameBloc implements BlocBase {
 
   List<String> alreadyAppearedWords = [];
 
+  int get scoreStreamValue => _scoreSubject.value;
+
   @override
   void dispose() {
     _selectedLettersSubject.close();

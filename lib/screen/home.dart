@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hangman/screen/main_game.dart';
+import 'package:hangman/screen/leaderboard.dart';
 import 'package:hangman/widgets/keyboard.dart';
 
 class Home extends StatefulWidget {
@@ -48,7 +49,7 @@ class _HomeState extends State<Home> {
             ),
             RaisedButton(
               onPressed: () {
-                Navigator.of(context).pushNamed(MainGame.routeName);
+                Navigator.of(context).pushNamed(Leaderboard.routeName);
               },
               child: Text('Highscores'),
             ),

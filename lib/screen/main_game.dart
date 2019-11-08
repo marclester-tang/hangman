@@ -10,6 +10,7 @@ import 'package:hangman/widgets/animated_hangman.dart';
 import 'package:hangman/widgets/challenge_word.dart';
 import 'package:hangman/widgets/keyboard.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MainGame extends StatefulWidget {
   MainGame({Key key}) : super(key: key);
@@ -26,6 +27,7 @@ class _MainGameState extends State<MainGame> {
   MainGameBloc mainGameBloc;
   StreamSubscription<int> _wrongTriesCountStreamSubscription;
   HangmanController _hangmanController;
+  TextEditingController _textFieldController = TextEditingController();
 
   @override
   void didChangeDependencies() {
@@ -35,7 +37,7 @@ class _MainGameState extends State<MainGame> {
       mainGameBloc.initialize();
       _wrongTriesCountListener(mainGameBloc);
     }
-    if(_hangmanController == null){
+    if (_hangmanController == null) {
       _hangmanController = HangmanController();
     }
   }
@@ -44,13 +46,13 @@ class _MainGameState extends State<MainGame> {
   void dispose() {
     super.dispose();
     mainGameBloc.dispose();
+    _textFieldController.dispose();
     _wrongTriesCountStreamSubscription.cancel();
   }
 
   void _wrongTriesCountListener(MainGameBloc bloc) {
     _wrongTriesCountStreamSubscription = bloc.wrongTriesCountStream.listen(
       (int wrongTriesCount) {
-
         _hangmanController.playAnimationByTries(wrongTriesCount);
 
         if (wrongTriesCount >= mainGameBloc.maxNumberOfTries) {
@@ -69,10 +71,14 @@ class _MainGameState extends State<MainGame> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-            'Game Over',
+            "Sorry... You did good!",
             style: TextStyle(
               fontWeight: FontWeight.bold,
             ),
+          ),
+          content: TextField(
+            controller: _textFieldController,
+            decoration: InputDecoration(hintText: "Please enter your name"),
           ),
           actions: <Widget>[
             FlatButton(
@@ -81,6 +87,25 @@ class _MainGameState extends State<MainGame> {
                 context,
                 (route) => route.settings.name == Home.routeName,
               ),
+            ),
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: () {
+                if (_textFieldController.value.text.isEmpty) return;
+                Firestore.instance.runTransaction((Transaction tx) async {
+                  Map<String, dynamic> postData = {
+                    'name': _textFieldController.value.text,
+                    'score': mainGameBloc.scoreStreamValue
+                  };
+                  await tx.set(
+                      Firestore.instance.collection('leaderboard').document(),
+                      postData);
+                });
+                Navigator.popUntil(
+                  context,
+                  (route) => route.settings.name == Home.routeName,
+                );
+              },
             ),
           ],
         );
