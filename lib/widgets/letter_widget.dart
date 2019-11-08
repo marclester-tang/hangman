@@ -40,7 +40,12 @@ class LetterWidget extends StatelessWidget {
           child: Center(
             child: Text(
               letter != null ? letter.toUpperCase() : "",
-              style: TextStyle(fontSize: 22, color: Colors.white),
+              style: TextStyle(
+                fontSize: 22,
+                color: Colors.white,
+                fontFamily: 'Courier',
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ),

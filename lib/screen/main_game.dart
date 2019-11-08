@@ -185,13 +185,9 @@ class _MainGameState extends State<MainGame> {
       builder: (context, snapshot) {
         final int score = snapshot.hasData ? (snapshot.data[0] ?? 0) : 0;
 
-        return Container(
-          margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
-            color: Colors.red.withOpacity(0.5),
-          ),
+        return CircleAvatar(
+          minRadius: 30,
+          backgroundColor: Colors.red.withOpacity(0.5),
           child: Text(
             '$score',
             textAlign: TextAlign.center,
@@ -212,7 +208,8 @@ class _MainGameState extends State<MainGame> {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            colorFilter: ColorFilter.mode(Colors.white.withOpacity(0.7), BlendMode.dstATop),
+            colorFilter: ColorFilter.mode(
+                Colors.white.withOpacity(0.7), BlendMode.dstATop),
             image: AssetImage("assets/images/background.png"),
             fit: BoxFit.cover,
           ),
@@ -243,8 +240,8 @@ class _MainGameState extends State<MainGame> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      _buildHelpActions(),
-                      Expanded(child: _buildScoreStatsWidget()),
+                      Expanded(flex: 3, child: _buildHelpActions()),
+                      Expanded(flex: 1, child: _buildScoreStatsWidget()),
                     ],
                   ),
                   Container(
@@ -252,7 +249,7 @@ class _MainGameState extends State<MainGame> {
                       vertical: 15.0,
                       horizontal: 5.0,
                     ),
-                    color: Colors.orange.withOpacity(0.5),
+                    color: Colors.orange.withOpacity(0.25),
                     child: Keyboard(
                       selectedLetters: selectedLetters,
                       onPress:
