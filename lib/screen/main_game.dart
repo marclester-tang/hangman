@@ -212,6 +212,7 @@ class _MainGameState extends State<MainGame> {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
+            colorFilter: ColorFilter.mode(Colors.white.withOpacity(0.7), BlendMode.dstATop),
             image: AssetImage("assets/images/background.png"),
             fit: BoxFit.cover,
           ),

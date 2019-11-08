@@ -37,6 +37,5 @@ class _AnimatedHangmanState extends State<AnimatedHangman> {
       fit: BoxFit.contain,
       controller: widget.controller,
     );
-    ;
   }
 }
