@@ -1,5 +1,5 @@
 {
-	"version": 23,
+	"version": 24,
 	"artboards": [
 		{
 			"name": "Artboard",
@@ -536,6 +536,7 @@
 						0.23828125,
 						0.00048828125
 					],
+					"isDynamic": false,
 					"numTriangles": 2,
 					"triangles": [
 						3,
@@ -3209,6 +3210,7 @@
 						0.1064453125,
 						0.9443359375
 					],
+					"isDynamic": false,
 					"numTriangles": 2,
 					"triangles": [
 						3,
@@ -3804,7 +3806,7 @@
 						53.76679992675781,
 						-7.4581685066223145
 					],
-					"rotation": -1.6420844425461334,
+					"rotation": -1.6420844425461332,
 					"scale": [
 						0.6051511168479919,
 						0.6051803231239319
@@ -3836,6 +3838,7 @@
 						0.00048828125,
 						0.14013671875
 					],
+					"isDynamic": false,
 					"numTriangles": 2,
 					"triangles": [
 						0,
@@ -3893,7 +3896,7 @@
 						72.05753326416016,
 						6.077366352081299
 					],
-					"rotation": -1.3622007809095389,
+					"rotation": -1.3622007809095387,
 					"scale": [
 						0.4362831711769104,
 						0.4009716510772705
@@ -3925,6 +3928,7 @@
 						0.00048828125,
 						0.47412109375
 					],
+					"isDynamic": false,
 					"numTriangles": 2,
 					"triangles": [
 						3,
@@ -4050,6 +4054,7 @@
 						0.00048828125,
 						0.28076171875
 					],
+					"isDynamic": false,
 					"numTriangles": 2,
 					"triangles": [
 						3,
@@ -4139,6 +4144,7 @@
 						0.00048828125,
 						0.66748046875
 					],
+					"isDynamic": false,
 					"numTriangles": 2,
 					"triangles": [
 						3,
@@ -4264,6 +4270,7 @@
 						0.00048828125,
 						0.7958984375
 					],
+					"isDynamic": false,
 					"numTriangles": 2,
 					"triangles": [
 						3,
@@ -4353,6 +4360,7 @@
 						0.06982421875,
 						0.470703125
 					],
+					"isDynamic": false,
 					"numTriangles": 2,
 					"triangles": [
 						3,
@@ -4446,7 +4454,7 @@
 						76.72660064697266,
 						-3.3292977809906006
 					],
-					"rotation": -1.9913977158916505,
+					"rotation": -1.9913977158916507,
 					"scale": [
 						0.41933590173721313,
 						0.41933590173721313
@@ -4478,6 +4486,7 @@
 						0.00048828125,
 						0.92431640625
 					],
+					"isDynamic": false,
 					"numTriangles": 2,
 					"triangles": [
 						3,
@@ -4567,6 +4576,7 @@
 						0.06982421875,
 						0.66064453125
 					],
+					"isDynamic": false,
 					"numTriangles": 2,
 					"triangles": [
 						3,
@@ -8860,6 +8870,7 @@
 						0.74658203125,
 						0.00048828125
 					],
+					"isDynamic": false,
 					"numTriangles": 2,
 					"triangles": [
 						0,
@@ -8909,6 +8920,7 @@
 						0.74658203125,
 						0.00048828125
 					],
+					"isDynamic": false,
 					"numTriangles": 2,
 					"triangles": [
 						0,
@@ -8955,6 +8967,161 @@
 				}
 			],
 			"animations": [
+				{
+					"name": "0",
+					"fps": 60,
+					"duration": 10,
+					"isLooping": false,
+					"keyed": [
+						{
+							"component": 38,
+							"opacity": [
+								[
+									{
+										"time": 0,
+										"interpolatorType": 1,
+										"value": 1
+									}
+								]
+							]
+						},
+						{
+							"component": 101,
+							"rotation": [
+								[
+									{
+										"time": 0,
+										"interpolatorType": 1,
+										"value": 1.354147262399346
+									}
+								]
+							]
+						},
+						{
+							"component": 109,
+							"rotation": [
+								[
+									{
+										"time": 0,
+										"interpolatorType": 1,
+										"value": -1.464273644882262
+									}
+								]
+							]
+						},
+						{
+							"component": 116,
+							"opacity": [
+								[
+									{
+										"time": 0,
+										"interpolatorType": 1,
+										"value": 0
+									}
+								]
+							]
+						},
+						{
+							"component": 152,
+							"opacity": [
+								[
+									{
+										"time": 0,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 0
+									}
+								]
+							]
+						},
+						{
+							"component": 201,
+							"posX": [
+								[
+									{
+										"time": 0,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 503.030517578125
+									}
+								]
+							],
+							"posY": [
+								[
+									{
+										"time": 0,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 449.93975830078125
+									}
+								]
+							],
+							"scaleX": [
+								[
+									{
+										"time": 0,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 0.1
+									}
+								]
+							],
+							"scaleY": [
+								[
+									{
+										"time": 0,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 0.1
+									}
+								]
+							],
+							"opacity": [
+								[
+									{
+										"time": 0,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 0
+									}
+								]
+							]
+						},
+						{
+							"component": 202,
+							"opacity": [
+								[
+									{
+										"time": 0,
+										"interpolatorType": 1,
+										"value": 0
+									}
+								]
+							]
+						}
+					],
+					"animationStart": 0,
+					"animationEnd": 0,
+					"type": "animation"
+				},
 				{
 					"name": "1. tie hands",
 					"fps": 60,
@@ -9409,7 +9576,7 @@
 					"type": "animation"
 				},
 				{
-					"name": "3. tie feet ",
+					"name": "3. tie feet",
 					"fps": 60,
 					"duration": 10,
 					"isLooping": false,
@@ -9772,7 +9939,7 @@
 					"type": "animation"
 				},
 				{
-					"name": "4 tie feet  w/ rope",
+					"name": "4. tie feet w/ rope",
 					"fps": 60,
 					"duration": 10,
 					"isLooping": false,

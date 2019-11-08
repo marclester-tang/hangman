@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 enum Animation { STEP1, STEP2, STEP3, STEP4, STEP5 }
 
 class HangmanController extends FlareControls {
+  String _default;
   String _tieHands;
   String _tieHandsWithRope;
   String _tieFeet;
@@ -19,15 +20,16 @@ class HangmanController extends FlareControls {
 
 
   HangmanController(){
+    _default = "0";
     _tieHands = "1. tie hands";
     _tieHandsWithRope = "2. tie hands w/ rope";
-    _tieFeet = "3. tie feet ";
-    _tieFeetWithRope = "4 tie feet  w/ rope";
+    _tieFeet = "3. tie feet";
+    _tieFeetWithRope = "4. tie feet w/ rope";
     _coverHead = "5. cover head";
     _nooze = "6. noose";
     _hang = "7. hang";
     animations = [
-      "",
+      _default,
       _tieHands,
       _tieHandsWithRope,
       _tieFeet,
