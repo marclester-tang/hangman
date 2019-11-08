@@ -11,13 +11,13 @@ But be careful, every wrong guess, Mr. Skeleton will be one step closer to his d
 
 ## Lifelines
 
-We have "Lifeline" to help you along the way but you can only use them once per game so use them wisely. 
+We have "Lifelines" to help you along the way but you can only use them once per game so use them wisely. 
 
- - skips the current word.
+![](skip.png) - skips the current word.
 
- - removes half of the incorrect letters.
+![](5050.png) - removes half of the incorrect letters.
  
- - reveals a letter of the mystery word. 
+![](reveal.png) - reveals a letter of the mystery word. 
 
 ## Run
 ```
